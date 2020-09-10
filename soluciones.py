@@ -12,7 +12,7 @@ from functools import reduce
 from itertools import permutations
 from peutils import fibonacciGen, fibonacciList, primeFactors, isPalindrome, \
     isPrime, sievePrime, lcm, wday, num2txt, cycle, triangleGen, ndivisors, \
-    collatz
+    collatz, binom
 
 def pe001(l=1000):
     t = time()
@@ -475,6 +475,16 @@ def pe014(l=1000000):
     return r, time() - t
 
 
+def pe015(l=20):
+    t = time()
+    return (factorial(l + l) // (factorial(l) * factorial(l))), time() - t
+
+
+def pe015b(l=20):
+    t = time()
+    return binom(l + l, l), time() - t
+
+
 def pe016(l=1000):
     t = time()
     return sum(int(x) for x in str(2 ** l)), time() - t
@@ -496,6 +506,47 @@ def pe017(l=1000):
     for i in range(1, l + 1):
         n += len(num2txt(i))
     return n, time() - t
+
+
+def pe018(l=15):
+    t = time()
+    nums = '''75
+95 64
+17 47 82
+18 35 87 10
+20 04 82 47 65
+19 01 23 75 03 34
+88 02 77 73 07 63 67
+99 65 04 28 06 16 70 92
+41 41 26 56 83 40 80 70 33
+41 48 72 33 47 32 37 16 94 29
+53 71 44 65 25 43 91 52 97 51 14
+70 11 33 28 77 73 17 78 39 68 17 57
+91 71 52 38 17 14 91 43 58 50 27 29 48
+63 66 04 68 89 53 67 30 73 16 69 87 40 31
+04 62 98 27 23 09 70 98 73 93 38 53 60 04 23'''
+
+    #anums = [[int(x) for x in y.split(' ')] for y in nums.split('\n')]
+    anums = [list(map(int, y.split(' '))) for y in nums.split('\n')]
+
+    arr = [[[0 for _ in range(l)] for _ in range(l)] for _ in range(5)]
+
+    for y in range(l):
+        for x in range(y + 1):
+            #if x > y: break
+            arr[0][y][x] = anums[y][x]  # Datos
+            arr[1][y][x] = anums[y][x]  # Minimos
+            arr[2][y][x] = 0            # Ruta min
+            arr[3][y][x] = anums[y][x]  # Maximos
+            arr[4][y][x] = 0            # Ruta max
+
+    for y in range(l - 2, -1, -1):
+        for x in range(y + 1):
+            #if x > y: break
+            arr[1][y][x] += min(arr[1][y+1][x], arr[1][y+1][x+1])
+            arr[3][y][x] += max(arr[3][y+1][x], arr[3][y+1][x+1])
+
+    return arr[3][0][0], time() - t
 
 
 def pe019():
@@ -630,7 +681,11 @@ def pe041():
 
 def pe048(l=1000):
     t = time()
-    return sum([(x ** x) % 10000000000 for x in range(1, l + 1)]) % 10000000000, time() - t
+    return sum((x ** x) % 10000000000 for x in range(1, l + 1)) % 10000000000, time() - t
+
+
+def pe055(l=10000):
+    t = time()
 
 
 def pe063():
@@ -643,6 +698,34 @@ def pe063():
             if len(r) == e:
                 p.append((r, e))
     return len(p), time() - t
+
+
+def pe067():
+    t = time()
+    anums = []
+    with open("p067_triangle.txt", "r") as f:
+        for l, line in enumerate(f):
+            anums.append(list(map(int, line.split(' '))))
+
+    l += 1
+    arr = [[[0 for _ in range(l)] for _ in range(l)] for _ in range(5)]
+
+    for y in range(l):
+        for x in range(y + 1):
+            #if x > y: break
+            arr[0][y][x] = anums[y][x]  # Datos
+            arr[1][y][x] = anums[y][x]  # Minimos
+            arr[2][y][x] = 0            # Ruta min
+            arr[3][y][x] = anums[y][x]  # Maximos
+            arr[4][y][x] = 0            # Ruta max
+
+    for y in range(l - 2, -1, -1):
+        for x in range(y + 1):
+            #if x > y: break
+            arr[1][y][x] += min(arr[1][y+1][x], arr[1][y+1][x+1])
+            arr[3][y][x] += max(arr[3][y+1][x], arr[3][y+1][x+1])
+
+    return arr[3][0][0], time() - t
 
 
 def pe075(l=1500000):
