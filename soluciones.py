@@ -588,7 +588,7 @@ def pe021(l=10000):
                 #break
     return r, time() - t
 
-
+#review
 def pe021b(l=10000):
     t = time()
     r = set()
@@ -731,8 +731,8 @@ def pe035(l=1000000):
     p = sievePrime(1000000)
 
     def checknum(l):
-        n = str(l)
         if p[l] == 0: return False
+        n = str(l)
         dd = 10 ** (len(n) - 1)
         for i in n:
             if p[l] == 0: return False
