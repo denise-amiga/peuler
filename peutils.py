@@ -51,6 +51,7 @@ def divisors(l):
             d.append(i)
             d.append(l // i)
     if i * i == l: d.pop()  # Fix for perfect cuadratric
+    #if int(l ** 0.5) * int(l ** 0.5) == l: d.pop()
     return d
 
 def ndivisors(l):

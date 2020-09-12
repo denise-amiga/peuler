@@ -12,7 +12,7 @@ from functools import reduce
 from itertools import permutations
 from peutils import fibonacciGen, fibonacciList, primeFactors, isPalindrome, \
     isPrime, sievePrime, lcm, wday, num2txt, cycle, triangleGen, ndivisors, \
-    collatz, binom
+    divisors, collatz, binom
 
 def pe001(l=1000):
     t = time()
@@ -575,6 +575,51 @@ def pe020(l=100):
     return sum(map(int, str(factorial(l)))), time() - t
 
 
+def pe021(l=10000):
+    t = time()
+    d = [sum(divisors(x)) - x for x in range(1, l + 1)]
+    d = [0] + d
+    r = 0
+    for a in range(l + 1):
+        for b in range(a, l + 1):
+            if a == d[b] and b == d[a] and a != b:
+                r += (a + d[a])
+                #print((a,d[a]))
+                #break
+    return r, time() - t
+
+
+def pe021b(l=10000):
+    t = time()
+    r = set()
+    for a in range(l + 1):
+        b = sum(divisors(a)) - a
+        if b == sum(divisors(b)) - b and a != b:
+            r.add(a)
+            r.add(b)
+    return sum(r), time() - t
+
+
+def pe022():
+    t = time()
+    n = ['']
+    with open("p022_names.txt", "r") as f:
+        n += sorted(f.read().split(','))
+    r = 0
+    abc='"ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    for i, m in enumerate(n):
+        s = 0
+        for a in m:
+            s += abc.index(a)
+        r += (s * i)
+    return r, time() - t
+
+#review
+def pe023():
+    t = time()
+    return sum(x for x in range(24, 20162) if x < (sum(divisors(x)) - x)), time() - t
+
+
 def pe024(l=1000000):
     t = time()
     for i, p in enumerate(permutations('0123456789')):
@@ -627,6 +672,16 @@ def pe026b(l=1000):
         if c > m: m = c
     return m, time() - t
 
+
+def pe028(l=1001):
+    t = time()
+    s = 1
+    for d in range(3, l + 1, 2):
+        dd = d * d
+        s += (dd + (dd - d + 1) + (dd - 2 * (d - 1)) + (dd - 3 * (d - 1)))
+    return s, time() - t
+
+
 def pe029(l=100):
     t = time()
     return len(set(a ** b for a in range(2, l + 1) for b in range(2, l + 1))), time() - t
@@ -669,6 +724,36 @@ def pe034():
     for a in range(3, 2540161):
         if sum([factorial(int(b)) for b in str(a)]) == a: s.append(a)
     return sum(s), time() - t
+
+
+def pe035(l=1000000):
+    t = time()
+    p = sievePrime(1000000)
+
+    def checknum(l):
+        n = str(l)
+        if p[l] == 0: return False
+        dd = 10 ** (len(n) - 1)
+        for i in n:
+            if p[l] == 0: return False
+            l = ((l % 10) * dd) + (l // 10)
+        return True
+    r = 0
+    for a in range(1000000):
+        if checknum(a):
+            r += 1
+            #print(a)
+    return r, time() - t
+
+
+def pe036(l=1000000):
+    t = time()
+    s = 0
+    for i in range(1, l + 1, 2):  # even in bin not palindrome
+        if isPalindrome(i) and isPalindrome(bin(i)[2:]):
+            s += i
+            #print(i,bin(i))
+    return s, time() - t
 
 
 def pe041():
