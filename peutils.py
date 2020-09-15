@@ -8,6 +8,10 @@ Created on Thu Sep  3 15:23:53 2020
 from math import gcd
 
 
+def digitalSum(n):
+    return sum(map(int, str(n)))
+
+
 def triangleGen():
     a, b = 2, 1
     while True:
@@ -37,7 +41,7 @@ def primeFactors(l):
     while l % 2 == 0:
         f.append(2)
         l /= 2
-    for i in range(3, int((ll ** 0.5)) + 1, 2):
+    for i in range(3, int(ll ** 0.5) + 1, 2):
         while ll % i == 0:
             f.append(i)
             ll /= i
@@ -60,6 +64,7 @@ def ndivisors(l):
         if l % i == 0:
             d += 2
     if i * i == l: d -= 1  # Fix for perfect cuadratric
+    #if int(l ** 0.5) * int(l ** 0.5) == l: d -= 1
     return d
 
 

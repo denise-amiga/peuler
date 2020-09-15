@@ -12,7 +12,7 @@ from functools import reduce
 from itertools import permutations
 from peutils import fibonacciGen, fibonacciList, primeFactors, isPalindrome, \
     isPrime, sievePrime, lcm, wday, num2txt, cycle, triangleGen, ndivisors, \
-    divisors, collatz, binom
+    divisors, collatz, binom, digitalSum
 
 def pe001(l=1000):
     t = time()
@@ -718,6 +718,22 @@ def pe032():
     return sum(z), time() - t
 
 
+def pe033():
+    t = time()
+    n = m = 1
+    for ab in range(10, 100):
+        a, b = ab // 10, ab % 10
+        for cd in range(ab + 1, 100):
+            c, d = cd // 10, cd % 10
+            if d == 0: continue  # Division by zero :P
+            if ab / cd == a / d and b == c:
+                n *= ab
+                m *= cd
+                #print("{0}/{1}={2}/{3}".format(ab, cd, a, d))
+    #print("{0}/{1}={2}/{3}".format(n, m, n // gcd(n, m), m // gcd(n, m)))
+    return m // gcd(n, m), time() - t
+
+
 def pe034():
     t = time()
     s = []
@@ -728,7 +744,7 @@ def pe034():
 
 def pe035(l=1000000):
     t = time()
-    p = sievePrime(1000000)
+    p = sievePrime(l)
 
     def checknum(l):
         if p[l] == 0: return False
@@ -738,8 +754,9 @@ def pe035(l=1000000):
             if p[l] == 0: return False
             l = ((l % 10) * dd) + (l // 10)
         return True
+
     r = 0
-    for a in range(1000000):
+    for a in range(l):
         if checknum(a):
             r += 1
             #print(a)
@@ -756,12 +773,55 @@ def pe036(l=1000000):
     return s, time() - t
 
 
+def pe037(l=1000000):
+    t = time()
+    p = sievePrime(l)
+
+    def checknum(l):
+        if p[l] == 0: return False
+        ll = l
+        for _ in str(ll):
+            if p[ll] == 0: return False
+            ll //= 10
+        ll = l
+        for i in range(len(str(ll)), 0, -1):
+            if p[ll] == 0: return False
+            ll %= (10 ** (i - 1))
+        return True
+
+    r = 0
+    for a in range(11, l):
+        if checknum(a):
+            r += a
+            #print(a)
+    return r, time() - t
+
+
 def pe041():
     t = time()
-    p = sievePrime(7654322)
+    p = sievePrime(7654322)  # 98xxxxxxx all pandigitals mod3==0
     s = set('7654321')
     for i in range(7654321, 1234567, -1):
         if p[i] == 1 and s == set(str(i)): return i, time() - t
+
+
+def pe042():
+    t = time()
+    p = [0] * 231
+    for i in range(1, 21):
+        p[i * (i + 1) // 2] = 1
+
+    n = ['']
+    with open("p042_words.txt", "r") as f:
+        n += sorted(f.read().split(','))
+    r = 0
+    abc='"ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    for _, m in enumerate(n):
+        s = 0
+        for a in m:
+            s += abc.index(a)
+        if p[s] == 1: r += 1
+    return r, time() - t
 
 
 def pe048(l=1000):
@@ -769,8 +829,30 @@ def pe048(l=1000):
     return sum((x ** x) % 10000000000 for x in range(1, l + 1)) % 10000000000, time() - t
 
 
-def pe055(l=10000):
+def pe052(l=1000000):
     t = time()
+    for x in range(1, 10000001):
+        sx = set(str(x))
+        if sx == set(str(2*x)):
+            if sx == set(str(3*x)):
+                if sx == set(str(4*x)):
+                    if sx == set(str(5*x)):
+                        if sx == set(str(6*x)):
+                            return x, time() - t
+
+
+def pe056(l=100):
+    t = time()
+    m = 0
+    #m = []
+    for b in range(l + 1):
+        for e in range(l + 1):
+            #r = digitalSum(b ** e)
+            #if r > m: m = r
+            m = max(m, digitalSum(b ** e))
+            #m.append(digitalSum(b ** e))
+    return m, time() - t
+    #return max(m), time() - t
 
 
 def pe063():
@@ -807,8 +889,8 @@ def pe067():
     for y in range(l - 2, -1, -1):
         for x in range(y + 1):
             #if x > y: break
-            arr[1][y][x] += min(arr[1][y+1][x], arr[1][y+1][x+1])
-            arr[3][y][x] += max(arr[3][y+1][x], arr[3][y+1][x+1])
+            arr[1][y][x] += min(arr[1][y + 1][x], arr[1][y + 1][x + 1])
+            arr[3][y][x] += max(arr[3][y + 1][x], arr[3][y + 1][x + 1])
 
     return arr[3][0][0], time() - t
 
@@ -817,7 +899,7 @@ def pe075(l=1500000):
     t = time()
     pp = [0] * (l + 1)
     for m in range(2, int((l // 2) ** 0.5)):
-        for n in range(1 + (m & 1), m, 2):
+        for n in range(1 + (m & 1), m, 2):  # even's only
             if gcd(m, n) != 1: continue
             a = m ** 2 - n ** 2
             b = 2 * m * n
