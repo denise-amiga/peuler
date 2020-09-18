@@ -705,6 +705,19 @@ def pe030(l=5):
     return sum(s), time() - t
 
 
+def pe031(l=200):
+    def count(c, m, n):
+        w = [0] * (n + 1)
+        w[0] = 1
+        for i in range(m):
+            for j in range(c[i], n + 1):
+                w[j] += w[j-c[i]]
+        return w[n]
+    t = time()
+    coins = [1, 2, 5, 10, 20, 50, 100, 200]
+    return count(coins, len(coins), l), time() - t
+
+
 def pe032():
     t = time()
     s = set('123456789')
@@ -797,6 +810,20 @@ def pe037(l=1000000):
     return r, time() - t
 
 
+def pe038():
+    t = time()
+    s = set('123456789')
+    r = 0
+    for a in range(1, 9999):
+        z = ''
+        b = 1
+        while len(z) < 9:
+            z += str(a * b)
+            b += 1
+        if len(z) == 9 and s == set(z): r = max(r, int(z))
+    return r, time() - t
+
+
 def pe041():
     t = time()
     p = sievePrime(7654322)  # 98xxxxxxx all pandigitals mod3==0
@@ -824,20 +851,57 @@ def pe042():
     return r, time() - t
 
 
+def pe043():
+    t = time()
+    s = set('0123456789')
+    r = 0
+    for d0 in range(10):
+        for d1 in range(10):
+            for d2 in range(10):
+                for d3 in range(0, 9, 2):
+                    for d4 in range(10):
+                        if (d2*100+d3*10+d4) % 3 != 0: continue
+                        for d5 in range(0, 11, 5):
+                            for d6 in range(10):
+                                if (d4*100+d5*10+d6) % 7 != 0: continue
+                                for d7 in range(10):
+                                    if (d5*100+d6*10+d7) % 11 != 0: continue
+                                    for d8 in range(10):
+                                        if (d6*100+d7*10+d8) % 13 != 0: continue
+                                        for d9 in range(10):
+                                            if (d7*100+d8*10+d9) % 17 != 0: continue
+                                            n = str(d0) + str(d1) + str(d2) + str(d3) + \
+                                                str(d4) + str(d5) + str(d6) + str(d7) + \
+                                                str(d8) + str(d9)
+                                            if len(n) != 10: continue
+                                            if s == set(n):
+                                                #print(n)
+                                                r += int(n)
+    return r, time() - t
+
+
 def pe048(l=1000):
     t = time()
     return sum((x ** x) % 10000000000 for x in range(1, l + 1)) % 10000000000, time() - t
 
 
+def pe045():
+    t = time()
+    tt = {n * (n + 1) // 2 for n in range(1, 56000)}  # not necesary, all tt are hh
+    pp = {n * (3 * n - 1) // 2 for n in range(1, 32000)}
+    hh = {n * (2 * n - 1) for n in range(1, 28000)}
+    return max(tt & pp & hh), time() - t
+
+
 def pe052(l=1000000):
     t = time()
-    for x in range(1, 10000001):
-        sx = set(str(x))
-        if sx == set(str(2*x)):
-            if sx == set(str(3*x)):
-                if sx == set(str(4*x)):
-                    if sx == set(str(5*x)):
-                        if sx == set(str(6*x)):
+    for x in range(1, l + 1):
+        s = set(str(x))
+        if s == set(str(2*x)):
+            if s == set(str(3*x)):
+                if s == set(str(4*x)):
+                    if s == set(str(5*x)):
+                        if s == set(str(6*x)):
                             return x, time() - t
 
 
@@ -948,20 +1012,6 @@ def pe099():
 
 
 #-----------------------------------------------------------------------------
-#todo
-def pe038():
-    t = time()
-    for a in range(1, 987654322):
-        p = 1
-        while True:
-            b = a * 1000000 + a * 2000 + a
-            n = str(b)
-
-
-#todo
-def pe043():
-    t = time()
-
 
 #todo
 def pe066(l=1000):
